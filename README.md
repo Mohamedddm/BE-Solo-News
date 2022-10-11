@@ -18,7 +18,7 @@ To install, do the following:
 npm install pg
 ```
 
-The second package to be installed is the "dotenv" package. This is to allow dynamic connection to either of the 2 local databases depending on the environment you run it in; dev or test.
+The second package to be installed is the "dotenv" package. This is to allow dynamic connection to either of the 2 local databases depending on the environment you run it in, either dev or test.
 
 To install, do the following:
 
