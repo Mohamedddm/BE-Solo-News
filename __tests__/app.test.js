@@ -42,13 +42,23 @@ describe("GET /api/topics", () => {
         expect(body).toEqual(expectedBody);
       });
   });
-  test.only("404: Invalid endpoint inputted", () => {
+  test("404: Invalid endpoint inputted", () => {
     return request(app)
       .get("/api/topicss")
       .expect(404)
       .then(({ body }) => {
-        console.log(body);
         expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe.only("GET /api/articles/:article_id", () => {
+  test("200: Should return specified data", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
       });
   });
 });
