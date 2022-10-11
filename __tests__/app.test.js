@@ -14,11 +14,32 @@ afterAll(() => {
 
 describe("GET /api/topics", () => {
   test("200: Should return all topics in test db", () => {
+    const expectedBody = {
+      topics: [
+        { slug: "mitch", description: "The man, the Mitch, the legend" },
+        { slug: "cats", description: "Not dogs" },
+        { slug: "paper", description: "what books are made of" },
+      ],
+    };
+
     return request(app)
       .get("/api/topics")
       .expect(200)
-      .then((data) => {
-        //expect(data).toEqual("nothing");
+      .then(({ body }) => {
+        //sexpect
+        expect(typeof body).toBe("object");
+        expect(typeof body.topics).toBe("object");
+        expect(Array.isArray(body.topics)).toBe(true);
+        expect(body.topics).toHaveLength(3);
+
+        body.topics.forEach((topic) => {
+          expect(topic).toEqual({
+            slug: expect.any(String),
+            description: expect.any(String),
+          });
+        });
+
+        expect(body).toEqual(expectedBody);
       });
   });
 });
