@@ -42,4 +42,13 @@ describe("GET /api/topics", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+  test.only("404: Invalid endpoint inputted", () => {
+    return request(app)
+      .get("/api/topicss")
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.msg).toBe("Not Found");
+      });
+  });
 });
