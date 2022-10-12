@@ -5,5 +5,7 @@ exports.controller_fetchTopics = (req, res, next) => {
     .then((data) => {
       res.status(200).send({ topics: data });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
