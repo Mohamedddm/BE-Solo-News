@@ -1,4 +1,7 @@
 const db = require("../db/connection.js");
+const {
+  controller_fetchCommentByID,
+} = require("../controller/comment.controller.js");
 
 exports.model_fetchArticleByID = (article_id) => {
   return db
@@ -9,6 +12,19 @@ exports.model_fetchArticleByID = (article_id) => {
       }
       return article;
     });
+  /*const arrayOfPromises = [];
+  arrayOfPromises.push(
+    db
+      .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
+      .then(({ rows: [article] }) => {
+        if (!article) {
+          return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+        return article;
+      })
+  );
+  arrayOfPromises.push(controller_fetchCommentByID(article_id));*/
+  //return controller_fetchCommentByID(article_id);
 };
 
 exports.model_patchArticleByID = (article_id, inc_votes) => {
