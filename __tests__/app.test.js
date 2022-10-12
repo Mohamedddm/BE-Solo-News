@@ -51,7 +51,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("200: Should return specified data", () => {
     const expectedBody = {
       article: {
@@ -111,6 +111,68 @@ describe.only("GET /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body).toEqual(expectedBody);
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: Should return all users in test db", () => {
+    const expectedBody = {
+      users: [
+        {
+          username: "butter_bridge",
+          name: "jonny",
+          avatar_url:
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        },
+        {
+          username: "icellusedkars",
+          name: "sam",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
+        },
+        {
+          username: "rogersop",
+          name: "paul",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        },
+        {
+          username: "lurker",
+          name: "do_nothing",
+          avatar_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        },
+      ],
+    };
+
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(typeof body).toBe("object");
+        expect(typeof body.users).toBe("object");
+        expect(Array.isArray(body.users)).toBe(true);
+        expect(body.users).toHaveLength(4);
+
+        body.users.forEach((user) => {
+          expect(user).toEqual({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+
+        expect(body).toEqual(expectedBody);
+      });
+  });
+  test("404: Invalid endpoint inputted AND if no users in db", () => {
+    return request(app)
+      .get("/api/userss")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
       });
   });
 });
