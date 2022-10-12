@@ -19,6 +19,9 @@ app.get("/api/topics", controller_fetchTopics);
 //articles
 app.get("/api/articles/:article_id", controller_fetchArticleByID);
 
+//users
+app.get("/api/users");
+
 //All other endpoints
 app.all("/api/*", handle404Errors);
 

@@ -51,7 +51,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("200: Should return specified data", () => {
     const expectedBody = {
       article: {
