@@ -150,7 +150,6 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(typeof body).toBe("object");
         expect(typeof body.users).toBe("object");
         expect(Array.isArray(body.users)).toBe(true);
@@ -173,6 +172,67 @@ describe("GET /api/users", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("404: Invalid endpoint inputted AND if no users in db", () => {
+    return request(app)
+      .get("/api/userss")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Should update votes on specific article", () => {
+    const expectedBody = {
+      updatedArticles: {
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 105,
+      },
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 5 })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.updatedArticles.votes).toBe(105);
+        expect(body).toEqual(expectedBody);
+      });
+  });
+  test("404: Invalid endpoint inputted", () => {
+    return request(app)
+      .patch("/api/articless/1")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("404: Invalid ID", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: Invalid parametric endpoint type", () => {
+    const expectedBody = { msg: "400: Invalid id" };
+    return request(app)
+      .patch("/api/articles/lol")
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual(expectedBody);
       });
   });
 });
