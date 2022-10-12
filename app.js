@@ -10,7 +10,7 @@ const { controller_fetchTopics } = require("./controller/topic.controller");
 const {
   controller_fetchArticleByID,
 } = require("./controller/article.controller");
-
+const { controller_fetchUsers } = require("./controller/user.controller.js");
 app.use(express.json());
 
 //topics
@@ -20,7 +20,7 @@ app.get("/api/topics", controller_fetchTopics);
 app.get("/api/articles/:article_id", controller_fetchArticleByID);
 
 //users
-app.get("/api/users");
+app.get("/api/users", controller_fetchUsers);
 
 //All other endpoints
 app.all("/api/*", handle404Errors);
