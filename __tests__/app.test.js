@@ -184,8 +184,8 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("PATCH /api/articles/:article_id", () => {
-  test.only("200: Should update votes on specific article", () => {
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Should update votes on specific article", () => {
     const expectedBody = {
       updatedArticles: {
         article_id: 1,
@@ -218,7 +218,7 @@ describe.only("PATCH /api/articles/:article_id", () => {
   });
   test("404: Invalid ID", () => {
     return request(app)
-      .patch("/api/articless/9999")
+      .patch("/api/articles/9999")
       .send({ inc_votes: 5 })
       .expect(404)
       .then(({ body }) => {

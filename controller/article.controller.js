@@ -17,8 +17,8 @@ exports.controller_patchArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
   model_patchArticleByID(article_id, inc_votes)
-    .then((data) => {
-      res.status(201).send({ updatedArticles: data });
+    .then((updatedArticles) => {
+      res.status(201).send({ updatedArticles });
     })
     .catch(next);
 };
