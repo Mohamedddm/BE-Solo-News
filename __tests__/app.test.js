@@ -184,20 +184,18 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("PATCH /api/articles/:article_id", () => {
-  test("200: Should update votes on specific article", () => {
+describe.only("PATCH /api/articles/:article_id", () => {
+  test.only("200: Should update votes on specific article", () => {
     const expectedBody = {
-      updatedArticles: [
-        {
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 105,
-        },
-      ],
+      updatedArticles: {
+        article_id: 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 105,
+      },
     };
 
     return request(app)
@@ -205,24 +203,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 5 })
       .expect(201)
       .then(({ body }) => {
-        expect(typeof body).toBe("object");
-        expect(typeof body.updatedArticles).toBe("object");
-        expect(Array.isArray(body.updatedArticles)).toBe(true);
-        expect(Object.keys(body.updatedArticles[0])).toHaveLength(7);
-
-        body.updatedArticles.forEach((article) => {
-          expect(article).toEqual({
-            article_id: expect.any(Number),
-            title: expect.any(String),
-            topic: expect.any(String),
-            author: expect.any(String),
-            body: expect.any(String),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-          });
-        });
-
-        expect(body.updatedArticles[0].votes).toBe(105);
+        expect(body.updatedArticles.votes).toBe(105);
         expect(body).toEqual(expectedBody);
       });
   });

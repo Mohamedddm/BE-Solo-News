@@ -18,6 +18,6 @@ exports.model_patchArticleByID = (article_id, inc_votes) => {
       [inc_votes, article_id]
     )
     .then(({ rows: article }) => {
-      return article;
+      return article[0];
     });
 };
