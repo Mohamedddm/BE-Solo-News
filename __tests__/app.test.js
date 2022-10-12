@@ -107,7 +107,7 @@ describe.only("GET /api/articles/:article_id", () => {
   test("404: Invalid ID", () => {
     const expectedBody = { msg: "Not Found" };
     return request(app)
-      .get("/api/articles/9999")
+      .get("/api/articles/999999")
       .expect(404)
       .then(({ body }) => {
         expect(body).toEqual(expectedBody);

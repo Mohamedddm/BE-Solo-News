@@ -1,6 +1,6 @@
 exports.handleCustomErrors = (err, req, res, next) => {
   if (err.code === 404) {
-    res.status(err.status).send({ msg: "Not Found" });
+    res.status(err.code).send({ msg: "Not Found" });
   } else {
     next(err);
   }
