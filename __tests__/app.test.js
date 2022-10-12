@@ -84,7 +84,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(Object.keys(body)).toHaveLength(2);
         expect(Object.keys(body).includes("comment_count")).toBe(true);
         expect(Object.keys(body.article)).toHaveLength(7);
