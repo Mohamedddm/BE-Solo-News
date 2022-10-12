@@ -175,4 +175,53 @@ describe("GET /api/users", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
+  test("404: Invalid endpoint inputted AND if no users in db", () => {
+    return request(app)
+      .get("/api/userss")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe.only("PATCH /api/articles/:article_id", () => {
+  test.only("200: Should update votes on specific article", () => {
+    /*const expectedBody = {
+        topics: [
+          { slug: "mitch", description: "The man, the Mitch, the legend" },
+          { slug: "cats", description: "Not dogs" },
+          { slug: "paper", description: "what books are made of" },
+        ],
+      };*/
+
+    return request(app)
+      .patch("/api/articles/5")
+      .send({ inc_votes: 1 })
+      .expect(201)
+      .then(({ body }) => {
+        console.log(body);
+        /*expect(typeof body).toBe("object");
+          expect(typeof body.topics).toBe("object");
+          expect(Array.isArray(body.topics)).toBe(true);
+          expect(body.topics).toHaveLength(3);
+  
+          body.topics.forEach((topic) => {
+            expect(topic).toEqual({
+              slug: expect.any(String),
+              description: expect.any(String),
+            });
+          });
+  
+          expect(body).toEqual(expectedBody);*/
+      });
+  });
+  /*test("404: Invalid endpoint inputted", () => {
+      return request(app)
+        .get("/api/topicss")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });*/
 });

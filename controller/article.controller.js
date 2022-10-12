@@ -1,4 +1,7 @@
-const { model_fetchArticleByID } = require("../model/article.model");
+const {
+  model_fetchArticleByID,
+  model_patchArticleByID,
+} = require("../model/article.model");
 
 exports.controller_fetchArticleByID = (req, res, next) => {
   model_fetchArticleByID(req.params.article_id)
@@ -8,4 +11,12 @@ exports.controller_fetchArticleByID = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.controller_patchArticleByID = (req, res, next) => {
+  const { article_id } = req.params.article_id;
+  const { inc_votes } = req.body;
+  model_patchArticleByID(article_id, inc_votes).then((data) => {
+    res.status(201).send(data);
+  });
 };
