@@ -1,14 +1,14 @@
-exports.handlePsqlErrors = (err, req, res, next) => {
-  if (err.code === "2PP02") {
-    res.status(400).send({ msg: "Invalid id" });
+exports.handleCustomErrors = (err, req, res, next) => {
+  if (err.code === 404) {
+    res.status(err.status).send({ msg: "Not Found" });
   } else {
     next(err);
   }
 };
 
-exports.handleCustomErrors = (err, req, res, next) => {
-  if (err.code === 404) {
-    res.status(err.status).send({ msg: "Not Found" });
+exports.handlePsqlErrors = (err, req, res, next) => {
+  if (err.code === "22P02") {
+    res.status(400).send({ msg: "400: Invalid id" });
   } else {
     next(err);
   }
