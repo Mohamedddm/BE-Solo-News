@@ -104,4 +104,13 @@ describe.only("GET /api/articles/:article_id", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+  test("404: Invalid ID", () => {
+    const expectedBody = { msg: "Not Found" };
+    return request(app)
+      .get("/api/articles/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual(expectedBody);
+      });
+  });
 });
