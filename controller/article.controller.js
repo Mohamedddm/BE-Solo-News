@@ -14,9 +14,11 @@ exports.controller_fetchArticleByID = (req, res, next) => {
 };
 
 exports.controller_patchArticleByID = (req, res, next) => {
-  const { article_id } = req.params.article_id;
+  const { article_id } = req.params;
   const { inc_votes } = req.body;
-  model_patchArticleByID(article_id, inc_votes).then((data) => {
-    res.status(201).send(data);
-  });
+  model_patchArticleByID(article_id, inc_votes)
+    .then((data) => {
+      res.status(201).send({ updatedArticles: data });
+    })
+    .catch(next);
 };

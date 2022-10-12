@@ -17,7 +17,7 @@ exports.model_patchArticleByID = (article_id, inc_votes) => {
       "UPDATE articles SET votes = votes + $1 WHERE article_id=$2 RETURNING *;",
       [inc_votes, article_id]
     )
-    .then(({ rows }) => {
-      console.log(rows);
+    .then(({ rows: article }) => {
+      return article;
     });
 };
