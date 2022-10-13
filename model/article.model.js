@@ -24,3 +24,15 @@ exports.model_patchArticleByID = (article_id, inc_votes) => {
       return article;
     });
 };
+
+exports.model_fetchArticles = () => {
+  return db
+    .query("SELECT * FROM articles ORDER BY created_at DESC")
+    .then(({ rows: articles }) => {
+      console.log(articles);
+      if (articles.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+      return articles;
+    });
+};

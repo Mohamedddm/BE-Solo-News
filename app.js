@@ -10,6 +10,7 @@ const { controller_fetchTopics } = require("./controller/topic.controller");
 const {
   controller_fetchArticleByID,
   controller_patchArticleByID,
+  controller_fetchArticles,
 } = require("./controller/article.controller");
 const { controller_fetchUsers } = require("./controller/user.controller.js");
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(express.json());
 app.get("/api/topics", controller_fetchTopics);
 
 //articles
+app.get("/api/articles", controller_fetchArticles);
 app.get("/api/articles/:article_id", controller_fetchArticleByID);
 app.patch("/api/articles/:article_id", controller_patchArticleByID);
 

@@ -271,3 +271,44 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("200: Should return all articles in test db", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body[0]);
+        expect(Array.isArray(body)).toBe(true);
+
+        body.forEach((articleObj) => {
+          expect(Object.keys(articleObj)).toHaveLength(2);
+          expect(articleObj.article).toEqual(expect.any(Object));
+          expect(articleObj.comment_count).toEqual(expect.any(Number));
+        });
+      });
+  });
+
+  test("404: Invalid endpoint inputted", () => {
+    return request(app)
+      .get("/api/articless")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  test("404: Invalid if no records in topics table", () => {
+    return db
+      .query("TRUNCATE topics CASCADE")
+      .then(() => {
+        return db.query("SELECT * FROM topics");
+      })
+      .then(({ rows: data }) => {
+        return request(app).get("/api/articles").expect(404);
+      })
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
