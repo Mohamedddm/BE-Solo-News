@@ -3,14 +3,18 @@ const {
   model_patchArticleByID,
 } = require("../model/article.model");
 
+const { model_fetchCommentByID } = require("../model/comment.model.js");
+
 exports.controller_fetchArticleByID = (req, res, next) => {
-  model_fetchArticleByID(req.params.article_id)
-    .then((article) => {
-      res.status(200).send({ article });
+  const { article_id } = req.params;
+  Promise.all([
+    model_fetchArticleByID(article_id),
+    model_fetchCommentByID(article_id),
+  ])
+    .then(([article, comment_count]) => {
+      res.status(200).send({ article, comment_count: comment_count.length });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.controller_patchArticleByID = (req, res, next) => {

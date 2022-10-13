@@ -41,10 +41,25 @@ describe("GET /api/topics", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+
   test("404: Invalid endpoint inputted", () => {
     return request(app)
       .get("/api/topicss")
       .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  test("404: Invalid if no records in topics table", () => {
+    return db
+      .query("TRUNCATE topics CASCADE")
+      .then(() => {
+        return db.query("SELECT * FROM topics");
+      })
+      .then(({ rows: data }) => {
+        return request(app).get("/api/topics").expect(404);
+      })
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
       });
@@ -63,14 +78,14 @@ describe("GET /api/articles/:article_id", () => {
         created_at: "2020-07-09T20:11:00.000Z",
         votes: 100,
       },
+      comment_count: 11,
     };
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(typeof body).toBe("object");
-        expect(typeof body.article).toBe("object");
-        expect(Array.isArray(body.article)).toBe(false);
+        expect(Object.keys(body)).toHaveLength(2);
+        expect(Object.keys(body).includes("comment_count")).toBe(true);
         expect(Object.keys(body.article)).toHaveLength(7);
 
         expect(body.article).toEqual({
@@ -86,6 +101,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+
   test("400: Should return error message from psql", () => {
     const expectedBody = { msg: "400: Invalid id" };
     return request(app)
@@ -104,7 +120,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body).toEqual(expectedBody);
       });
   });
-  test("404: Invalid ID", () => {
+  test("404: Invalid, ID does not exist in table", () => {
     const expectedBody = { msg: "Not Found" };
     return request(app)
       .get("/api/articles/999999")
@@ -166,6 +182,7 @@ describe("GET /api/users", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+
   test("404: Invalid endpoint inputted AND if no users in db", () => {
     return request(app)
       .get("/api/userss")
@@ -174,10 +191,25 @@ describe("GET /api/users", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("404: Invalid endpoint inputted AND if no users in db", () => {
+
+  test("404: Invalid endpoint inputted", () => {
     return request(app)
       .get("/api/userss")
       .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  test("404: Invalid if no users in db", () => {
+    return db
+      .query("TRUNCATE users CASCADE")
+      .then(() => {
+        return db.query("SELECT * FROM users");
+      })
+      .then(() => {
+        return request(app).get("/api/users/1").expect(404);
+      })
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
       });
@@ -207,6 +239,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body).toEqual(expectedBody);
       });
   });
+
   test("404: Invalid endpoint inputted", () => {
     return request(app)
       .patch("/api/articless/1")
@@ -216,6 +249,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
+
   test("404: Invalid ID", () => {
     return request(app)
       .patch("/api/articles/9999")
@@ -225,6 +259,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
+
   test("400: Invalid parametric endpoint type", () => {
     const expectedBody = { msg: "400: Invalid id" };
     return request(app)
