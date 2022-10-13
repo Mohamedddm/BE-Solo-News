@@ -300,9 +300,9 @@ describe("GET /api/articles", () => {
 
   test("404: Invalid if no records in topics table", () => {
     return db
-      .query("TRUNCATE topics CASCADE")
+      .query("TRUNCATE articles CASCADE")
       .then(() => {
-        return db.query("SELECT * FROM topics");
+        return db.query("SELECT * FROM articles");
       })
       .then(({ rows: data }) => {
         return request(app).get("/api/articles").expect(404);
