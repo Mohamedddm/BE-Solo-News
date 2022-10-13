@@ -2,12 +2,15 @@ const db = require("../db/connection.js");
 
 exports.model_fetchArticleByID = (article_id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
-    .then(({ rows: [article] }) => {
-      if (!article) {
+    .query(
+      "SELECT articles.*, COUNT(*)::INT AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id",
+      [article_id]
+    )
+    .then(({ rows: [articles] }) => {
+      if (!articles) {
         return Promise.reject({ status: 404, msg: "Not Found" });
       }
-      return article;
+      return articles;
     });
 };
 
@@ -27,7 +30,9 @@ exports.model_patchArticleByID = (article_id, inc_votes) => {
 
 exports.model_fetchArticles = () => {
   return db
-    .query("SELECT * FROM articles ORDER BY created_at DESC")
+    .query(
+      "SELECT articles.*, COUNT(comments.*)::INT AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id"
+    )
     .then(({ rows: articles }) => {
       if (articles.length === 0) {
         return Promise.reject({ status: 404, msg: "Not Found" });

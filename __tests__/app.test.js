@@ -50,20 +50,6 @@ describe("GET /api/topics", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-
-  test("404: Invalid if no records in topics table", () => {
-    return db
-      .query("TRUNCATE topics CASCADE")
-      .then(() => {
-        return db.query("SELECT * FROM topics");
-      })
-      .then(({ rows: data }) => {
-        return request(app).get("/api/topics").expect(404);
-      })
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
 });
 
 describe("GET /api/articles/:article_id", () => {
@@ -77,16 +63,15 @@ describe("GET /api/articles/:article_id", () => {
         body: "I find this existence challenging",
         created_at: "2020-07-09T20:11:00.000Z",
         votes: 100,
+        comment_count: 11,
       },
-      comment_count: 11,
     };
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(Object.keys(body)).toHaveLength(2);
-        expect(Object.keys(body).includes("comment_count")).toBe(true);
-        expect(Object.keys(body.article)).toHaveLength(7);
+        expect(Object.keys(body)).toHaveLength(1);
+        expect(Object.keys(body.article)).toHaveLength(8);
 
         expect(body.article).toEqual({
           article_id: expect.any(Number),
@@ -96,6 +81,7 @@ describe("GET /api/articles/:article_id", () => {
           body: expect.any(String),
           created_at: expect.any(String),
           votes: expect.any(Number),
+          comment_count: expect.any(Number),
         });
 
         expect(body).toEqual(expectedBody);
@@ -200,20 +186,6 @@ describe("GET /api/users", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-
-  test("404: Invalid if no users in db", () => {
-    return db
-      .query("TRUNCATE users CASCADE")
-      .then(() => {
-        return db.query("SELECT * FROM users");
-      })
-      .then(() => {
-        return request(app).get("/api/users/1").expect(404);
-      })
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
@@ -278,13 +250,12 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body[0]);
-        expect(Array.isArray(body)).toBe(true);
+        console.log(body);
+        expect(Array.isArray(body.articles)).toBe(true);
 
-        body.forEach((articleObj) => {
-          expect(Object.keys(articleObj)).toHaveLength(2);
-          expect(articleObj.article).toEqual(expect.any(Object));
-          expect(articleObj.comment_count).toEqual(expect.any(Number));
+        body.articles.forEach((articleObj) => {
+          expect(Object.keys(articleObj)).toHaveLength(8);
+          expect(articleObj).toEqual(expect.any(Object));
         });
       });
   });
@@ -293,20 +264,6 @@ describe("GET /api/articles", () => {
     return request(app)
       .get("/api/articless")
       .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
-
-  test("404: Invalid if no records in topics table", () => {
-    return db
-      .query("TRUNCATE articles CASCADE")
-      .then(() => {
-        return db.query("SELECT * FROM articles");
-      })
-      .then(({ rows: data }) => {
-        return request(app).get("/api/articles").expect(404);
-      })
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
       });
