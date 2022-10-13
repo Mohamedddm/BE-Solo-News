@@ -250,7 +250,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(Array.isArray(body.articles)).toBe(true);
 
         body.articles.forEach((articleObj) => {
