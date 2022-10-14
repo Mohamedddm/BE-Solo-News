@@ -25,7 +25,9 @@ exports.controller_patchArticleByID = (req, res, next) => {
 };
 
 exports.controller_fetchArticles = (req, res, next) => {
-  model_fetchArticles()
+  const { topic } = req.query;
+  console.log(topic);
+  model_fetchArticles(topic)
     .then((articles) => {
       res.status(200).send({ articles });
     })

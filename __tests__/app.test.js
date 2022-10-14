@@ -256,6 +256,8 @@ describe("GET /api/articles", () => {
           expect(Object.keys(articleObj)).toHaveLength(8);
           expect(articleObj).toEqual(expect.any(Object));
         });
+
+        expect(body.articles).toHaveLength(12);
       });
   });
 
@@ -265,6 +267,22 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("404: Invalid query entered", () => {
+    return request(app)
+      .get("/api/articles?topic=not_real_topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("200: topic = cat query should return 1 article", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(1);
       });
   });
 });
