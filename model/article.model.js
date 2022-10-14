@@ -45,3 +45,7 @@ exports.model_fetchArticles = (topic) => {
     return articles;
   });
 };
+
+/*exports.model_fetchCommentsFromArticleByID = (article_id) => {
+  return db.query("SELECT * FROM commments");
+};*/

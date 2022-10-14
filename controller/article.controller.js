@@ -5,6 +5,10 @@ const {
   model_fetchArticles,
 } = require("../model/article.model");
 
+const {
+  model_fetchCommentsFromArticleByID,
+} = require("../model/comment.model.js");
+
 exports.controller_fetchArticleByID = (req, res, next) => {
   const { article_id } = req.params;
   model_fetchArticleByID(article_id)
@@ -30,6 +34,15 @@ exports.controller_fetchArticles = (req, res, next) => {
   model_fetchArticles(topic)
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.controller_fetchCommentsFromArticleByID = (req, res, next) => {
+  const { article_id } = req.params;
+  model_fetchCommentsFromArticleByID(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
     })
     .catch(next);
 };

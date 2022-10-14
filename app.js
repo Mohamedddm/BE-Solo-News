@@ -11,6 +11,7 @@ const {
   controller_fetchArticleByID,
   controller_patchArticleByID,
   controller_fetchArticles,
+  controller_fetchCommentsFromArticleByID,
 } = require("./controller/article.controller");
 const { controller_fetchUsers } = require("./controller/user.controller.js");
 app.use(express.json());
@@ -22,6 +23,10 @@ app.get("/api/topics", controller_fetchTopics);
 app.get("/api/articles", controller_fetchArticles);
 app.get("/api/articles/:article_id", controller_fetchArticleByID);
 app.patch("/api/articles/:article_id", controller_patchArticleByID);
+app.get(
+  "/api/articles/:article_id/comments",
+  controller_fetchCommentsFromArticleByID
+);
 
 //users
 app.get("/api/users", controller_fetchUsers);

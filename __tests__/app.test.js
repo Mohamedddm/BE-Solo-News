@@ -286,3 +286,50 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe.only("GET /api/articles/:article_id/comments", () => {
+  test.only("200: Should return all comments associated with specific article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.comments)).toBe(true);
+
+        body.comments.forEach((comment) => {
+          expect(Object.keys(comment)).toHaveLength(5);
+          expect(comment).toEqual({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+          });
+        });
+      });
+  });
+
+  test.only("404: Invalid endpoint inputted", () => {
+    return request(app)
+      .get("/api/articles/1/commentss")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test.only("404: Invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/99999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test.only("400: Invalid article_id type", () => {
+    return request(app)
+      .get("/api/articles/lol/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400: Invalid id");
+      });
+  });
+});
