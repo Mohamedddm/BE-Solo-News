@@ -46,6 +46,14 @@ exports.model_fetchArticles = (topic) => {
   });
 };
 
-/*exports.model_fetchCommentsFromArticleByID = (article_id) => {
-  return db.query("SELECT * FROM commments");
-};*/
+exports.model_postCommentByID = (article_id, reqBody) => {
+  const { username, body } = reqBody;
+  return db
+    .query(
+      "INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;",
+      [article_id, username, body]
+    )
+    .then(({ rows: postedComment }) => {
+      return postedComment;
+    });
+};

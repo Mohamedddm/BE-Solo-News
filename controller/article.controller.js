@@ -3,6 +3,7 @@ const {
   model_fetchArticleByID,
   model_patchArticleByID,
   model_fetchArticles,
+  model_postCommentByID,
 } = require("../model/article.model");
 
 const {
@@ -30,7 +31,6 @@ exports.controller_patchArticleByID = (req, res, next) => {
 
 exports.controller_fetchArticles = (req, res, next) => {
   const { topic } = req.query;
-  console.log(topic);
   model_fetchArticles(topic)
     .then((articles) => {
       res.status(200).send({ articles });
@@ -43,6 +43,16 @@ exports.controller_fetchCommentsFromArticleByID = (req, res, next) => {
   model_fetchCommentsFromArticleByID(article_id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.controller_postCommentByID = (req, res, next) => {
+  const { article_id } = req.params;
+  const { body } = req;
+  model_postCommentByID(article_id, body)
+    .then(([postedComment]) => {
+      res.status(201).send(postedComment);
     })
     .catch(next);
 };

@@ -287,8 +287,8 @@ describe("GET /api/articles", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id/comments", () => {
-  test.only("200: Should return all comments associated with specific article_id", () => {
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Should return all comments associated with specific article_id", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
@@ -308,7 +308,7 @@ describe.only("GET /api/articles/:article_id/comments", () => {
       });
   });
 
-  test.only("404: Invalid endpoint inputted", () => {
+  test("404: Invalid endpoint inputted", () => {
     return request(app)
       .get("/api/articles/1/commentss")
       .expect(404)
@@ -316,7 +316,7 @@ describe.only("GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test.only("404: Invalid article_id", () => {
+  test("404: Invalid article_id", () => {
     return request(app)
       .get("/api/articles/99999/comments")
       .expect(404)
@@ -324,12 +324,72 @@ describe.only("GET /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test.only("400: Invalid article_id type", () => {
+  test("400: Invalid article_id type", () => {
     return request(app)
       .get("/api/articles/lol/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400: Invalid id");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("200: Should add comment onto comment table", () => {
+    const expectedBody = {
+      comment_id: 19,
+      body: "Hello world",
+      article_id: 1,
+      author: "butter_bridge",
+      votes: 0,
+      created_at: "2022-10-14T13:42:38.913Z",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "Hello world" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment_id).toBe(19);
+        expect(body).toEqual({
+          comment_id: 19,
+          body: "Hello world",
+          article_id: 1,
+          author: "butter_bridge",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("404: Invalid endpoint inputted", () => {
+    return request(app)
+      .post("/api/articles/1/commentss")
+      .send({ username: "butter_bridge", body: "Hello world" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  test("404: Invalid ID", () => {
+    return request(app)
+      .post("/api/articles/11111/comments")
+      .send({ username: "butter_bridge", body: "Hello world" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400: Invalid id");
+      });
+  });
+
+  test("400: Invalid parametric endpoint type", () => {
+    const expectedBody = { msg: "400: Invalid id" };
+    return request(app)
+      .post("/api/articles/lol/comments")
+      .send({ username: "butter_bridge", body: "Hello world" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual(expectedBody);
       });
   });
 });

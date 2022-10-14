@@ -12,6 +12,7 @@ const {
   controller_patchArticleByID,
   controller_fetchArticles,
   controller_fetchCommentsFromArticleByID,
+  controller_postCommentByID,
 } = require("./controller/article.controller");
 const { controller_fetchUsers } = require("./controller/user.controller.js");
 app.use(express.json());
@@ -27,6 +28,7 @@ app.get(
   "/api/articles/:article_id/comments",
   controller_fetchCommentsFromArticleByID
 );
+app.post("/api/articles/:article_id/comments", controller_postCommentByID);
 
 //users
 app.get("/api/users", controller_fetchUsers);
