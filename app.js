@@ -15,6 +15,11 @@ const {
   controller_postCommentByID,
 } = require("./controller/article.controller");
 const { controller_fetchUsers } = require("./controller/user.controller.js");
+
+const cors = require("cors");
+
+app.use(cors());
+
 app.use(express.json());
 
 //topics
